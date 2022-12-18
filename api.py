@@ -11,6 +11,7 @@ class PetFriends:
     def __init__(self):
         self.base_url = "https://petfriends.skillfactory.ru/"
 
+    # Copied from dimm23 repository on https://github.com/SkillfactoryCoding/QAP_PetFriensTesting
     def get_api_key(self, email: str, passwd: str) -> json:
         """Метод делает запрос к API сервера и возвращает статус запроса и результат в формате
         JSON с уникальным ключем пользователя, найденного по указанным email и паролем"""
@@ -28,6 +29,8 @@ class PetFriends:
             result = res.text
         return status, result
 
+
+    # Copied from dimm23 repository on https://github.com/SkillfactoryCoding/QAP_PetFriensTesting
     def get_list_of_pets(self, auth_key: json, filter: str = "") -> json:
         """Метод делает запрос к API сервера и возвращает статус запроса и результат в формате JSON
         со списком наденных питомцев, совпадающих с фильтром. На данный момент фильтр может иметь
@@ -46,6 +49,8 @@ class PetFriends:
             result = res.text
         return status, result
 
+
+    # Copied from dimm23 repository on https://github.com/SkillfactoryCoding/QAP_PetFriensTesting
     def add_new_pet(self, auth_key: json, name: str, animal_type: str,
                     age: str, pet_photo: str) -> json:
         """Метод отправляет (постит) на сервер данные о добавляемом питомце и возвращает статус
@@ -71,6 +76,7 @@ class PetFriends:
         return status, result
 
 
+    # Copied from dimm23 repository on https://github.com/SkillfactoryCoding/QAP_PetFriensTesting
     def delete_pet(self, auth_key: json, pet_id: str) -> json:
         """Метод отправляет на сервер запрос на удаление питомца по указанному ID и возвращает
         статус запроса и результат в формате JSON с текстом уведомления о успешном удалении.
@@ -87,6 +93,8 @@ class PetFriends:
             result = res.text
         return status, result
 
+
+    # Copied from dimm23 repository on https://github.com/SkillfactoryCoding/QAP_PetFriensTesting
     def update_pet_info(self, auth_key: json, pet_id: str, name: str,
                         animal_type: str, age: int) -> json:
         """Метод отправляет запрос на сервер о обновлении данных питомуа по указанному ID и
@@ -133,11 +141,14 @@ class PetFriends:
 
 
     def add_pets_photo(self, auth_key: json, pet_id: str, pet_photo: str) -> json:
-        """Метод добавляет фото формата jpg к существующей карточке питомца без фото."""
+        """Метод добавляет фото формата jpg или png к существующей карточке питомца без фото."""
+
+        # Проверяем расширение файла изображения
+        image_format = 'image/jpeg' if pet_photo[-3:-1] == 'jpg' else 'image/png'
 
         data = MultipartEncoder(
             fields={
-                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg')
+                'pet_photo': (pet_photo, open(pet_photo, 'rb'), image_format)
             })
         headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
 
